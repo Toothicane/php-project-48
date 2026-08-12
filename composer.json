@@ -1,0 +1,17 @@
+{
+    "name": "hexlet/code",
+    "description": "Project for comparing structures in json/yml format",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        }
+    },
+    "require": {
+        "docopt/docopt": "^1.0"
+    },
+    "bin": [
+        "bin/gendiff"
+    ]
+}
