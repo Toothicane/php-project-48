@@ -1,6 +1,10 @@
 #!/usr/bin/env php
 <?php
 
+use function Hexlet\Code\parse;
+
+use Docopt\Handler;
+
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
 if (file_exists($autoloadPath1)) {
@@ -8,8 +12,6 @@ if (file_exists($autoloadPath1)) {
 } else {
     require_once $autoloadPath2;
 }
-
-use Docopt\Handler;
 
 $doc = <<<DOC
 Generate diff
@@ -28,3 +30,30 @@ DOC;
 $handler = new Handler();
 
 $args = $handler->handle($doc);
+
+$firstFile = $args['<firstFile>'];
+$secondFile = $args['<secondFile>'];
+
+$firstContent = file_get_contents($firstFile);
+if ($firstContent === false) {
+    echo "Couldn't read firstFile";
+    return;
+}
+$secondContent = file_get_contents($secondFile);
+if ($secondContent === false) {
+    echo "Couldn't read secondFile";
+    return;
+}
+
+print_r("Raw:\n\n");
+print_r($firstContent);
+print_r("\n\n");
+print_r($secondContent);
+
+$firstData = parse($firstContent);
+$secondData = parse($secondContent);
+
+print_r("\n\nParsed:\n\n");
+print_r($firstData);
+print_r("\n");
+print_r($secondData);
