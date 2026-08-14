@@ -8,8 +8,7 @@ use function Funct\Collection\sortBy;
 
 function parse(string $content): array
 {
-    $decoded = json_decode($content, true, flags: JSON_THROW_ON_ERROR);
-    return $decoded;
+    return json_decode($content, true, flags: JSON_THROW_ON_ERROR);
 }
 
 function valueToString(mixed $value): string
