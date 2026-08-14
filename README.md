@@ -9,3 +9,6 @@
 
 ### Flat JSON comparison demo:
 https://asciinema.org/a/dCHXQS7u5SecXxQb
+
+### Flat YAML comparison demo:
+https://asciinema.org/a/SNVhYVNOeLJDyd4f

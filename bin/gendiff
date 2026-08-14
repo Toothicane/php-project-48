@@ -2,6 +2,7 @@
 <?php
 
 use Docopt\Handler;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 use function Hexlet\Code\genDiff;
 
@@ -39,6 +40,8 @@ try {
   print($diff . "\n");
 } catch (\JsonException $e) {
   print("Invalid JSON: {$e->getMessage()}");
-} catch (\RuntimeException $e) {
+} catch (ParseException $e) {
+  print("Invalid YAML: {$e->getMessage()}"); 
+}catch (\RuntimeException $e) {
   print($e->getMessage());
 }

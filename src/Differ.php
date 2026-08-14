@@ -2,14 +2,8 @@
 
 namespace Hexlet\Code;
 
-use RuntimeException;
-
 use function Funct\Collection\sortBy;
-
-function parse(string $content): array
-{
-    return json_decode($content, true, flags: JSON_THROW_ON_ERROR);
-}
+use function Hexlet\Code\parse;
 
 function valueToString(mixed $value): string
 {
@@ -22,17 +16,8 @@ function valueToString(mixed $value): string
 
 function genDiff(string $pathToFile1, string $pathToFile2): string
 {
-    $firstContent = file_get_contents($pathToFile1);
-    if ($firstContent === false) {
-        throw new RuntimeException("Couldn't read {$pathToFile1}");
-    }
-    $secondContent = file_get_contents($pathToFile2);
-    if ($secondContent === false) {
-        throw new RuntimeException("Couldn't read {$pathToFile2}");
-    }
-
-    $firstData = parse($firstContent);
-    $secondData = parse($secondContent);
+    $firstData = parse($pathToFile1);
+    $secondData = parse($pathToFile2);
 
     $keys = array_unique(array_merge(array_keys($firstData), array_keys($secondData)));
 
