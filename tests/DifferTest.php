@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Hexlet\Code\genDiff;
 
-class DiffetTest extends TestCase
+class DifferTest extends TestCase
 {
     public function testSameValues(): void
     {
