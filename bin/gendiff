@@ -5,7 +5,6 @@ use Docopt\Handler;
 use Symfony\Component\Yaml\Exception\ParseException;
 
 use function Hexlet\Code\genDiff;
-use function Hexlet\Code\formatStylish;
 
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
@@ -30,21 +29,14 @@ Options:
 DOC;
 
 $handler = new Handler();
-
 $args = $handler->handle($doc);
 
 $pathToFirstFile = $args['<firstFile>'];
 $pathToSecondFile = $args['<secondFile>'];
-
 $format = $args['--format'];
 
 try {
-  $formatter = match ($format) {
-    'stylish' => formatStylish(...),
-    default => throw new \RuntimeException("Unknown format: {$format}")
-  };
-
-  $diff = genDiff($pathToFirstFile, $pathToSecondFile, $formatter);
+  $diff = genDiff($pathToFirstFile, $pathToSecondFile, $format);
   print($diff . "\n");
 } catch (\JsonException $e) {
   print("Invalid JSON: {$e->getMessage()}");

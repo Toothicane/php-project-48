@@ -7,16 +7,13 @@ use function Funct\Collection\sortBy;
 function genDiff(
     string $pathToFile1,
     string $pathToFile2,
-    ?callable $formatter = null
+    string $formatName = 'stylish'
 ): string {
     $firstData = parse($pathToFile1);
     $secondData = parse($pathToFile2);
 
-    if ($formatter === null) {
-        $formatter = formatStylish(...);
-    }
-
     $diff = buildDiff($firstData, $secondData);
+    $formatter = getFormatter($formatName);
     return $formatter($diff);
 }
 

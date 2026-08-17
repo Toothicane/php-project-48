@@ -1,6 +1,6 @@
 <?php
 
-namespace Hexlet\Code;
+namespace Hexlet\Code\Formatters;
 
 use function Funct\Collection\sortBy;
 

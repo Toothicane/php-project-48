@@ -15,3 +15,6 @@ https://asciinema.org/a/SNVhYVNOeLJDyd4f
 
 ### Nested structures comparison with stylish formatter demo:
 https://asciinema.org/a/O9Xs7yqHNRfSLSUN
+
+### Nested structures comparison with plain formatter demo
+https://asciinema.org/a/2yJraSl7TYs0DxAC

@@ -10,7 +10,9 @@
         "files": [
             "src/Differ.php", 
             "src/Parsers.php",
-            "src/Formatter.php"
+            "src/Formatters.php",
+            "src/Formatters/StylishFormatter.php",
+            "src/Formatters/PlainFormatter.php"
         ]
     },
     "require": {
