@@ -18,76 +18,11 @@ class DifferTest extends TestCase
     }
 
     #[DataProvider('fileFormatProvider')]
-    public function testSameValues(string $extension): void
-    {
-        $file = __DIR__ . "/fixtures/{$extension}/same.{$extension}";
-        $diff = genDiff($file, $file);
-        $this->assertEquals("  host: hexlet.io", $diff);
-    }
-
-    #[DataProvider('fileFormatProvider')]
-    public function testDifferentValues(string $extension): void
-    {
-        $file1 = __DIR__ . "/fixtures/{$extension}/changed_first.{$extension}";
-        $file2 = __DIR__ . "/fixtures/{$extension}/changed_second.{$extension}";
-        $diff = genDiff($file1, $file2);
-        $this->assertEquals("- timeout: 50\n+ timeout: 20", $diff);
-    }
-
-    #[DataProvider('fileFormatProvider')]
-    public function testOnlyInFirst(string $extension): void
-    {
-        $file1 = __DIR__ . "/fixtures/{$extension}/only_one.{$extension}";
-        $file2 = __DIR__ . "/fixtures/{$extension}/same.{$extension}";
-        $diff = genDiff($file1, $file2);
-        $this->assertEquals("  host: hexlet.io\n- proxy: 123.234.53.22", $diff);
-    }
-
-    #[DataProvider('fileFormatProvider')]
-    public function testOnlyInSecond(string $extension): void
-    {
-        $file1 = __DIR__ . "/fixtures/{$extension}/same.{$extension}";
-        $file2 = __DIR__ . "/fixtures/{$extension}/only_one.{$extension}";
-        $diff = genDiff($file1, $file2);
-        $this->assertEquals("  host: hexlet.io\n+ proxy: 123.234.53.22", $diff);
-    }
-
-    #[DataProvider('fileFormatProvider')]
     public function testEmptyFiles(string $extension): void
     {
         $file = __DIR__ . "/fixtures/{$extension}/empty.{$extension}";
         $diff = genDiff($file, $file);
-        $this->assertEmpty($diff);
-    }
-
-    #[DataProvider('fileFormatProvider')]
-    public function testFirstEmpty(string $extension): void
-    {
-        $file1 = __DIR__ . "/fixtures/{$extension}/empty.{$extension}";
-        $file2 = __DIR__ . "/fixtures/{$extension}/same.{$extension}";
-        $diff = genDiff($file1, $file2);
-        $this->assertEquals("+ host: hexlet.io", $diff);
-    }
-
-    #[DataProvider('fileFormatProvider')]
-    public function testSecondEmpty(string $extension): void
-    {
-        $file1 = __DIR__ . "/fixtures/{$extension}/same.{$extension}";
-        $file2 = __DIR__ . "/fixtures/{$extension}/empty.{$extension}";
-        $diff = genDiff($file1, $file2);
-        $this->assertEquals("- host: hexlet.io", $diff);
-    }
-
-    #[DataProvider('fileFormatProvider')]
-    public function testAll(string $extension): void
-    {
-        $file1 = __DIR__ . "/fixtures/{$extension}/all_first.{$extension}";
-        $file2 = __DIR__ . "/fixtures/{$extension}/all_second.{$extension}";
-        $diff = genDiff($file1, $file2);
-        $this->assertEquals(
-            "- follow: false\n  host: hexlet.io\n- proxy: 123.234.53.22\n- timeout: 50\n+ timeout: 20\n+ verbose: true",
-            $diff
-        );
+        $this->assertEquals("{\n\n}", $diff);
     }
 
     #[DataProvider('fileFormatProvider')]
@@ -97,8 +32,142 @@ class DifferTest extends TestCase
         $file2 = __DIR__ . "/fixtures/{$extension}/to_string_second.{$extension}";
         $diff = genDiff($file1, $file2);
         $this->assertEquals(
-            "- enabled: false\n+ enabled: true\n- retries: 3\n+ retries: 3",
+            "{\n  - enabled: false\n  + enabled: true\n  - retries: 3\n  + retries: 3\n}",
             $diff
         );
+    }
+
+    #[DataProvider('fileFormatProvider')]
+    public function testNestedToEmpty(string $extension): void
+    {
+        $file1 = __DIR__ . "/fixtures/{$extension}/nested_first.{$extension}";
+        $file2 = __DIR__ . "/fixtures/{$extension}/empty.{$extension}";
+        $diff = genDiff($file1, $file2);
+        $expected = <<<'EXPECTED'
+{
+  - common: {
+        setting1: Value 1
+        setting2: 200
+        setting3: true
+        setting6: {
+            doge: {
+                wow: 
+            }
+            key: value
+        }
+    }
+  - group1: {
+        baz: bas
+        foo: bar
+        nest: {
+            key: value
+        }
+    }
+  - group2: {
+        abc: 12345
+        deep: {
+            id: 45
+        }
+    }
+}
+EXPECTED;
+        $this->assertEquals($expected, $diff);
+    }
+
+    #[DataProvider('fileFormatProvider')]
+    public function testEmptyToNested(string $extension): void
+    {
+        $file1 = __DIR__ . "/fixtures/{$extension}/empty.{$extension}";
+        $file2 = __DIR__ . "/fixtures/{$extension}/nested_second.{$extension}";
+        $diff = genDiff($file1, $file2);
+        $expected = <<<'EXPECTED'
+{
+  + common: {
+        follow: false
+        setting1: Value 1
+        setting3: null
+        setting4: blah blah
+        setting5: {
+            key5: value5
+        }
+        setting6: {
+            doge: {
+                wow: so much
+            }
+            key: value
+            ops: vops
+        }
+    }
+  + group1: {
+        baz: bars
+        foo: bar
+        nest: str
+    }
+  + group3: {
+        deep: {
+            id: {
+                number: 45
+            }
+        }
+        fee: 100500
+    }
+}
+EXPECTED;
+        $this->assertEquals($expected, $diff);
+    }
+
+    #[DataProvider('fileFormatProvider')]
+    public function testNested(string $extension): void
+    {
+        $file1 = __DIR__ . "/fixtures/{$extension}/nested_first.{$extension}";
+        $file2 = __DIR__ . "/fixtures/{$extension}/nested_second.{$extension}";
+        $diff = genDiff($file1, $file2);
+        $expected = <<<'EXPECTED'
+{
+    common: {
+      + follow: false
+        setting1: Value 1
+      - setting2: 200
+      - setting3: true
+      + setting3: null
+      + setting4: blah blah
+      + setting5: {
+            key5: value5
+        }
+        setting6: {
+            doge: {
+              - wow: 
+              + wow: so much
+            }
+            key: value
+          + ops: vops
+        }
+    }
+    group1: {
+      - baz: bas
+      + baz: bars
+        foo: bar
+      - nest: {
+            key: value
+        }
+      + nest: str
+    }
+  - group2: {
+        abc: 12345
+        deep: {
+            id: 45
+        }
+    }
+  + group3: {
+        deep: {
+            id: {
+                number: 45
+            }
+        }
+        fee: 100500
+    }
+}
+EXPECTED;
+        $this->assertEquals($expected, $diff);
     }
 }

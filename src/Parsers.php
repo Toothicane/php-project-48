@@ -7,7 +7,7 @@ use RuntimeException;
 
 function parse(string $filePath): array
 {
-    $content = file_get_contents($filePath);
+    $content = @file_get_contents($filePath);
     if ($content === false) {
         throw new RuntimeException("Couldn't read {$filePath}");
     }
