@@ -170,4 +170,41 @@ EXPECTED;
 EXPECTED;
         $this->assertEquals($expected, $diff);
     }
+
+    #[DataProvider('fileFormatProvider')]
+    public function testExplicitFormatName(string $extension): void
+    {
+        $file1 = __DIR__ . "/../fixtures/{$extension}/nested_first.{$extension}";
+        $file2 = __DIR__ . "/../fixtures/{$extension}/empty.{$extension}";
+        $diff = genDiff($file1, $file2, 'stylish');
+        $expected = <<<'EXPECTED'
+{
+  - common: {
+        setting1: Value 1
+        setting2: 200
+        setting3: true
+        setting6: {
+            doge: {
+                wow: 
+            }
+            key: value
+        }
+    }
+  - group1: {
+        baz: bas
+        foo: bar
+        nest: {
+            key: value
+        }
+    }
+  - group2: {
+        abc: 12345
+        deep: {
+            id: 45
+        }
+    }
+}
+EXPECTED;
+        $this->assertEquals($expected, $diff);
+    }
 }

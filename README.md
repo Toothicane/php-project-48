@@ -18,3 +18,6 @@ https://asciinema.org/a/O9Xs7yqHNRfSLSUN
 
 ### Nested structures comparison with plain formatter demo
 https://asciinema.org/a/2yJraSl7TYs0DxAC
+
+### Nested structures comparison with json formatter demo
+https://asciinema.org/a/xjEcLkwgs9yinxBH
